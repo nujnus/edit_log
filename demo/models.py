@@ -1,0 +1,27 @@
+from django.db import models
+
+#class ModelDemo(models.Model):
+#    b = models.IntegerField()
+#    b2 = models.BigIntegerField()
+#    b3 = models.PositiveIntegerField()
+#    b4 = models.IntegerField()
+#    b5 = models.BooleanField()
+#    b6 = models.NullBooleanField()
+#    b7 = models.FloatField()
+#    b8 = models.DecimalField(max_digits=5, decimal_places=2)
+#    b9 = models.CharField(max_length=100)
+#    b10 = models.TextField()
+#    b11 = models.URLField()
+#    b12 = models.UUIDField()
+#    b13 = models.DateField()
+#    b14 = models.DateTimeField()
+#    b15 = models.DurationField()
+#    b16 = models.TimeField()
+#    b17 = models.EmailField()
+#    b18 = models.FileField()
+#    b19 = models.FilePathField()
+#    b20 = models.ImageField()
+#    b21 = models.GenericIPAddressField()
+#    b22 = models.BinaryField()
+#    b23 = models.SlugField()
+
