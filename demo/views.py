@@ -69,20 +69,20 @@ class FileInfoSet(viewsets.ModelViewSet):
 #    def xxxxx(): pass
 #
 #
-class FileInfoDateSet(viewsets.ModelViewSet):
-    """
-    A viewset for viewing and editing user instances.
-    """
-    serializer_class = FileInfoDateSerializer
-    queryset = FileInfoDate.objects.all()
+#class FileInfoDateSet(viewsets.ModelViewSet):
+#    """
+#    A viewset for viewing and editing user instances.
+#    """
+#    serializer_class = FileInfoDateSerializer
+#    queryset = FileInfoDate.objects.all()
 #
 #
-class FileInfoHasGroupSet(viewsets.ModelViewSet):
-    """
-    A viewset for viewing and editing user instances.
-    """
-    serializer_class = FileInfoHasGroupSerializer
-    queryset = FileInfoHasGroup.objects.all()
+#class FileInfoHasGroupSet(viewsets.ModelViewSet):
+#    """
+#    A viewset for viewing and editing user instances.
+#    """
+#    serializer_class = FileInfoHasGroupSerializer
+#    queryset = FileInfoHasGroup.objects.all()
 #
 #
 class FileGroupSet(viewsets.ModelViewSet):
