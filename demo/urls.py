@@ -41,8 +41,6 @@ router.register(r'search_jobs', views.GroupSearchResultSet , basename='GroupSear
 urlpatterns = [
 #    # post
 #    path('files/', view.create_file_info),  # create_file_info
-#    # patch
-#    path('files/<file_id>/increase', view.update_file_info_edit_time, ),  # update_file_info_edit_time
 #    # get
 #    path('files/', view.filename_search),  # ?name_contains=123
 #    # get
@@ -56,11 +54,15 @@ urlpatterns = [
 #    # --------------------------------------------------------
 #    # action:
 #    # patch
-#    path('files/<file_id>/partial', view.tag_file),
+#    path('files/<file_id>/increase', view.update_file_info_edit_time, ),  # update_file_info_edit_time
+
 #    # patch
-#    path('files/<file_id>/partial', view.description_file),
+#    path('files/<file_id>/partial', view.tag_file),  #update_partial_tag
+#    # patch
+#    path('files/<file_id>/partial', view.description_file),  #update_partial_description
+
 #    # get  #可以用自定义routes作为alias  #还是独立一个action
-#    path('files/<file_id>/statistics_date', statistics_a_file_all_date, {"statistics_date": True}),
+#    path('files/<file_id>/dates', statistics_a_file_all_date, {"statistics_date": True}),
 #    path('files/<file_id>/sum_edit', statistics_a_file_all_edit_time_orderby, {"sum_edit": True}),
 #    # --------------------------------------------------------
 #    # post

@@ -14,7 +14,6 @@ from django.forms.models import model_to_dict
 from rest_framework.parsers import MultiPartParser, FileUploadParser, FormParser
 from rest_framework.decorators import parser_classes
 
-
 # @api_view(['GET'])
 # @authentication_classes([JWTAuthentication])
 # @permission_classes([IsAuthenticated])
@@ -23,6 +22,7 @@ from rest_framework.decorators import parser_classes
 
 
 import demo.codes as codes
+
 
 @api_view(['GET'])
 def special_case_2003(request, format=None):
@@ -38,6 +38,7 @@ def year_archive(request, year, format=None):
     print(request.query_params)
     return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
+
 @api_view(['GET', 'post'])
 def month_archive(request, year, month, format=None):
     print(year)
@@ -49,7 +50,10 @@ def month_archive(request, year, month, format=None):
 
 
 from demo.models import FileInfo, FileInfo_has_Date, FileInfoDate, FileInfoHasGroup, FileGroup, GroupSearchResult
-from demo.serializers import FileInfoSerializer,FileGroupSerializer,FileInfoHasGroupSerializer,GroupSearchResultSerializer, FileInfoDateSerializer
+from demo.serializers import FileInfoSerializer, FileGroupSerializer, FileInfoHasGroupSerializer, \
+    GroupSearchResultSerializer, FileInfoDateSerializer
+
+
 #
 #
 class FileInfoSet(viewsets.ModelViewSet):
@@ -58,18 +62,26 @@ class FileInfoSet(viewsets.ModelViewSet):
     """
     serializer_class = FileInfoSerializer
     queryset = FileInfo.objects.all()
-#
-#    @action()
-#    def xxx(): pass
-#
-#    @action()
-#    def xxxx(): pass
+
+    #
+    @action(methods=['patch'], detail=True, url_path="increase", url_name="increase")
+    def increase(): pass
+
+    #
+    @action(methods=['put'], detail=True, url_path="partial", url_name="partial_update")
+    def update_partial(): pass
+
+    @action(methods=['get'], detail=True, url_path="sum_edit", url_name="sum_edit")
+    def sum_edit(): pass
+
+    @action(methods=['get'], detail=True, url_path="dates", url_name="dates")
+    def dates(): pass
 #
 #    @action()
 #    def xxxxx(): pass
 #
 #
-#class FileInfoDateSet(viewsets.ModelViewSet):
+# class FileInfoDateSet(viewsets.ModelViewSet):
 #    """
 #    A viewset for viewing and editing user instances.
 #    """
@@ -77,7 +89,7 @@ class FileInfoSet(viewsets.ModelViewSet):
 #    queryset = FileInfoDate.objects.all()
 #
 #
-#class FileInfoHasGroupSet(viewsets.ModelViewSet):
+# class FileInfoHasGroupSet(viewsets.ModelViewSet):
 #    """
 #    A viewset for viewing and editing user instances.
 #    """
@@ -91,6 +103,8 @@ class FileGroupSet(viewsets.ModelViewSet):
     """
     serializer_class = FileGroupSerializer
     queryset = FileGroup.objects.all()
+
+
 #
 #
 class GroupSearchResultSet(viewsets.ModelViewSet):
