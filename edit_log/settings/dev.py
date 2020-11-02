@@ -27,7 +27,7 @@ INSTALLED_APPS += ['user_sys',
 AUTH_USER_MODEL = "user_sys.CustomizeUser"  # "app1.Test_user_model"
 
 REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER': "user_sys.utility.exception_handler"
+    #'EXCEPTION_HANDLER': "user_sys.utility.exception_handler"
 }
 
 MIDDLEWARE += []
@@ -54,7 +54,7 @@ AUTHENTICATION_BACKENDS = (
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'upload_files')
 MEDIA_URL = '/media/'
-TARGET_FILE_DIRECTORY = os.path.abspath(os.path.join(BASE_DIR, "../tmpfiles"))
+TARGET_FILE_DIRECTORY = os.path.abspath(os.path.join(BASE_DIR, "tmpfiles"))
 
 #日志
 LOGGING = {
