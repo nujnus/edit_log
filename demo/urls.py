@@ -79,6 +79,8 @@ urlpatterns = [
 #    path('search_jobs/', get_search_results),
 #    # get
 #    path('search_jobs/<search_job_id>', get_search_results),
+#------------------------------------------------------------
+#action:
 #    # get
 #    path('search_jobs/search', search_in_all_search_results),  # ?search=xxxx
 ]

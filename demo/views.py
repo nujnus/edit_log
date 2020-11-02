@@ -63,11 +63,9 @@ class FileInfoSet(viewsets.ModelViewSet):
     serializer_class = FileInfoSerializer
     queryset = FileInfo.objects.all()
 
-    #
     @action(methods=['patch'], detail=True, url_path="increase", url_name="increase")
     def increase(): pass
 
-    #
     @action(methods=['put'], detail=True, url_path="partial", url_name="partial_update")
     def update_partial(): pass
 
@@ -76,11 +74,26 @@ class FileInfoSet(viewsets.ModelViewSet):
 
     @action(methods=['get'], detail=True, url_path="dates", url_name="dates")
     def dates(): pass
-#
-#    @action()
-#    def xxxxx(): pass
-#
-#
+
+class FileGroupSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing user instances.
+    """
+    serializer_class = FileGroupSerializer
+    queryset = FileGroup.objects.all()
+
+    @action(methods=['post'], detail=True, url_path="search", url_name="search")
+    def search(): pass
+
+class GroupSearchResultSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing user instances.
+    """
+    serializer_class = GroupSearchResultSerializer
+    queryset = GroupSearchResult.objects.all()
+
+    @action(methods=['post'], detail=True, url_path="search", url_name="search")
+    def search(): pass
 # class FileInfoDateSet(viewsets.ModelViewSet):
 #    """
 #    A viewset for viewing and editing user instances.
@@ -97,19 +110,3 @@ class FileInfoSet(viewsets.ModelViewSet):
 #    queryset = FileInfoHasGroup.objects.all()
 #
 #
-class FileGroupSet(viewsets.ModelViewSet):
-    """
-    A viewset for viewing and editing user instances.
-    """
-    serializer_class = FileGroupSerializer
-    queryset = FileGroup.objects.all()
-
-
-#
-#
-class GroupSearchResultSet(viewsets.ModelViewSet):
-    """
-    A viewset for viewing and editing user instances.
-    """
-    serializer_class = GroupSearchResultSerializer
-    queryset = GroupSearchResult.objects.all()
