@@ -32,18 +32,13 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 #router.register(r'nujnus_record', ReocrdViewSet, basename='nujnus_record')
-# router.register(r'api_FileInfo2Set',  FileInfo2Set, basename='FileInfo2Set')
-# router.register(r'api_FileInfoDateSet',  FileInfoDateSet, basename='FileInfoDateSet')
-# router.register(r'api_FileInfoHasGroupSet',  FileInfoHasGroupSet, basename='FileInfoHasGroupSet')
-# router.register(r'api_FileGroup2Set', FileGroup2Set , basename='FileGroup2Set')
-# router.register(r'api_GroupSearchResultSet', GroupSearchResultSet , basename='GroupSearchResultSet')
-
+router.register(r'files',  views.FileInfoSet, basename='FileInfoSet')
+#router.register(r'FileInfoDateSet',  views.FileInfoDateSet, basename='FileInfoDateSet')
+#router.register(r'FileInfoHasGroupSet',  views.FileInfoHasGroupSet, basename='FileInfoHasGroupSet')
+router.register(r'groups', views.FileGroupSet , basename='FileGroup2Set')
+router.register(r'search_jobs', views.GroupSearchResultSet , basename='GroupSearchResultSet')
 # --------------------------------------------------------
-# router.register(r'files',  FileInfo2Set, basename='FileInfo2Set')
-# router.register(r'file_groups', FileGroup2Set , basename='FileGroup2Set')
-# router.register(r'search_jobs', GroupSearchResultSet , basename='GroupSearchResultSet')
-# --------------------------------------------------------
-#urlpatterns = [
+urlpatterns = [
 #    # post
 #    path('files/', view.create_file_info),  # create_file_info
 #    # patch
@@ -84,7 +79,7 @@ router = DefaultRouter()
 #    path('search_jobs/<search_job_id>', get_search_results),
 #    # get
 #    path('search_jobs/search', search_in_all_search_results),  # ?search=xxxx
-#]
+]
 # --------------------------------------------------------
 
 # urlpatterns = [
@@ -95,3 +90,5 @@ router = DefaultRouter()
 #        path('permissions/', views.permissions),
 #    ])),
 # ]
+
+urlpatterns += router.urls

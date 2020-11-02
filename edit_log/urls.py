@@ -48,7 +48,7 @@ schema_view = get_schema_view(
 
 urlpatterns_for_app = [
     path('user_sys/', include('user_sys.urls')),
-    path('demo/', include('demo.urls')),
+    path('demo/api/v1/', include('demo.urls')),
 ]
 
 urlpatterns_for_login = [
