@@ -64,16 +64,21 @@ class FileInfoSet(viewsets.ModelViewSet):
     queryset = FileInfo.objects.all()
 
     @action(methods=['patch'], detail=True, url_path="increase", url_name="increase")
-    def increase(): pass
+    def increase():
+        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
-    @action(methods=['put'], detail=True, url_path="partial", url_name="partial_update")
-    def update_partial(): pass
+    @action(methods=['patch'], detail=True, url_path="partial", url_name="partial_update")
+    def update_partial():
+        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
     @action(methods=['get'], detail=True, url_path="sum_edit", url_name="sum_edit")
-    def sum_edit(): pass
+    def sum_edit():
+        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
     @action(methods=['get'], detail=True, url_path="dates", url_name="dates")
-    def dates(): pass
+    def dates():
+        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+
 
 class FileGroupSet(viewsets.ModelViewSet):
     """
@@ -83,7 +88,9 @@ class FileGroupSet(viewsets.ModelViewSet):
     queryset = FileGroup.objects.all()
 
     @action(methods=['post'], detail=True, url_path="search", url_name="search")
-    def search(): pass
+    def search():
+        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+
 
 class GroupSearchResultSet(viewsets.ModelViewSet):
     """
@@ -93,7 +100,8 @@ class GroupSearchResultSet(viewsets.ModelViewSet):
     queryset = GroupSearchResult.objects.all()
 
     @action(methods=['post'], detail=True, url_path="search", url_name="search")
-    def search(): pass
+    def search():
+        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 # class FileInfoDateSet(viewsets.ModelViewSet):
 #    """
 #    A viewset for viewing and editing user instances.

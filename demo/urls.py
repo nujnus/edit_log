@@ -13,20 +13,20 @@ from django.urls import re_path
 
 from . import views
 
-urlpatterns = [
-    path('articlesx/2003/', views.special_case_2003),
-    # re_path(r'^articles/(?P<year>[0-9]{4})/$', views.year_archive),
-    path('articles/<int:year>/', views.year_archive),
-    # path('<year>/articles/', views.year_archive),
-    # re_path(r'^articles/(?P<year>[0-9]{4})/(?P<month>[0-9]{2})/$', views.month_archive),
-    # path('<year>--<month>/articles/', views.month_archive),
-    path('<year>--<month>/articles:watch/', views.month_archive),
-    path('<year>--<month>/articles:reboot/', views.month_archive),
-    path('<year>--<month>/articles:sendmail/', views.month_archive),
-    path('<year>--<month>/articles:clear/', views.month_archive),
-    path('<year>--<month>/articles:batch/', views.month_archive),
-    # re_path(r'^articles/(?P<year>[0-9]{4})/(?P<month>[0-9]{2})/(?P<slug>[\w-]+)/$', views.article_detail),
-]
+#urlpatterns = [
+#    path('articlesx/2003/', views.special_case_2003),
+#    # re_path(r'^articles/(?P<year>[0-9]{4})/$', views.year_archive),
+#    path('articles/<int:year>/', views.year_archive),
+#    # path('<year>/articles/', views.year_archive),
+#    # re_path(r'^articles/(?P<year>[0-9]{4})/(?P<month>[0-9]{2})/$', views.month_archive),
+#    # path('<year>--<month>/articles/', views.month_archive),
+#    path('<year>--<month>/articles:watch/', views.month_archive),
+#    path('<year>--<month>/articles:reboot/', views.month_archive),
+#    path('<year>--<month>/articles:sendmail/', views.month_archive),
+#    path('<year>--<month>/articles:clear/', views.month_archive),
+#    path('<year>--<month>/articles:batch/', views.month_archive),
+#    # re_path(r'^articles/(?P<year>[0-9]{4})/(?P<month>[0-9]{2})/(?P<slug>[\w-]+)/$', views.article_detail),
+#]
 
 from rest_framework.routers import DefaultRouter
 
@@ -42,7 +42,7 @@ urlpatterns = [
 #    # post
 #    path('files/', view.create_file_info),  # create_file_info
 #    # get
-#    path('files/', view.filename_search),  # ?name_contains=123
+#    path('files/', view.filename_search),  # ?name_contains=123   (((done)))
 #    # get
 #    path('files/', view.file_date_search),  # ?date=2020-1-1
 #    # get
