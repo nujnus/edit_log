@@ -53,23 +53,40 @@ from demo.models import FileInfo, FileInfo_has_Date, FileInfoDate, FileInfoHasGr
 from demo.serializers import FileInfoSerializer, FileGroupSerializer, FileInfoHasGroupSerializer, \
     GroupSearchResultSerializer, FileInfoDateSerializer
 
+#
+#
+from rest_framework import generics, mixins, views
 
-#
-#
-class FileInfoSet(viewsets.ModelViewSet):
+
+# class FileInfoSet(viewsets.ModelViewSet):
+class FileInfoSet(mixins.CreateModelMixin,
+                  #mixins.RetrieveModelMixin,
+                  #mixins.UpdateModelMixin,
+                  #mixins.DestroyModelMixin,
+                  # mixins.ListModelMixin,
+                  viewsets.GenericViewSet):
     """
     A viewset for viewing and editing user instances.
     """
     serializer_class = FileInfoSerializer
     queryset = FileInfo.objects.all()
 
+    def list(self, request, *args, **kwargs):
+        """
+        自定义搜索
+        """
+        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+
+    def partial_update(self, request, *args, **kwargs):
+        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+
     @action(methods=['patch'], detail=True, url_path="increase", url_name="increase")
     def increase(self, request, pk=None):
         return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
-    @action(methods=['patch'], detail=True, url_path="partial", url_name="partial_update")
-    def update_partial(self, request, pk=None):
-        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+    #@action(methods=['patch'], detail=True, url_path="partial", url_name="partial_update")
+    #def update_partial(self, request, pk=None):
+    #    return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
     @action(methods=['get'], detail=True, url_path="savetimes/sum", url_name="sum_savetimes")
     def sum_savetimes(self, request, pk=None):
@@ -80,7 +97,13 @@ class FileInfoSet(viewsets.ModelViewSet):
         return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
 
-class FileGroupSet(viewsets.ModelViewSet):
+#class FileGroupSet(viewsets.ModelViewSet):
+class FileGroupSet(mixins.CreateModelMixin,
+                  #mixins.RetrieveModelMixin,
+                  #mixins.UpdateModelMixin,
+                  #mixins.DestroyModelMixin,
+                  mixins.ListModelMixin,
+                  viewsets.GenericViewSet):
     """
     A viewset for viewing and editing user instances.
     """
@@ -95,7 +118,13 @@ class FileGroupSet(viewsets.ModelViewSet):
         return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
 
-class GroupSearchResultSet(viewsets.ModelViewSet):
+#class GroupSearchResultSet(viewsets.ModelViewSet):
+class GroupSearchResultSet(mixins.CreateModelMixin,
+                  mixins.RetrieveModelMixin,
+                  #mixins.UpdateModelMixin,
+                  #mixins.DestroyModelMixin,
+                  mixins.ListModelMixin,
+                  viewsets.GenericViewSet):
     """
     A viewset for viewing and editing user instances.
     """

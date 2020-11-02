@@ -39,9 +39,9 @@ router.register(r'groups', views.FileGroupSet , basename='FileGroup2Set')
 router.register(r'search_jobs', views.GroupSearchResultSet , basename='GroupSearchResultSet')
 # --------------------------------------------------------
 urlpatterns = [
-#    # post
+#    # post  #create
 #    path('files/', view.create_file_info),  # create_file_info
-#    # get
+#    # get   #rebuild
 #    path('files/', view.filename_search),  # ?name_contains=123   (((done)))
 #    # get
 #    path('files/', view.file_date_search),  # ?date=2020-1-1
