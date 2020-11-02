@@ -49,7 +49,7 @@ def month_archive(request, year, month, format=None):
 
 
 from demo.models import FileInfo, FileInfo_has_Date, FileInfoDate, FileInfoHasGroup, FileGroup, GroupSearchResult
-from demo.serializers import FileInfoSerializer#, FileInfoDateSerializer, FileInfoHasGroupSerializer, FileGroup2Serializer, GroupSearchResultSerializer
+from demo.serializers import FileInfoSerializer,FileGroupSerializer,FileInfoHasGroupSerializer,GroupSearchResultSerializer, FileInfoDateSerializer
 #
 #
 class FileInfoSet(viewsets.ModelViewSet):
@@ -69,33 +69,33 @@ class FileInfoSet(viewsets.ModelViewSet):
 #    def xxxxx(): pass
 #
 #
-#class FileInfoDateSet(viewsets.ModelViewSet):
-#    """
-#    A viewset for viewing and editing user instances.
-#    """
-#    serializer_class = FileInfoDateSerializer
-#    queryset = FileInfoDate.objects.all()
+class FileInfoDateSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing user instances.
+    """
+    serializer_class = FileInfoDateSerializer
+    queryset = FileInfoDate.objects.all()
 #
 #
-#class FileInfoHasGroupSet(viewsets.ModelViewSet):
-#    """
-#    A viewset for viewing and editing user instances.
-#    """
-#    serializer_class = FileInfoHasGroupSerializer
-#    queryset = FileInfoHasGroup.objects.all()
+class FileInfoHasGroupSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing user instances.
+    """
+    serializer_class = FileInfoHasGroupSerializer
+    queryset = FileInfoHasGroup.objects.all()
 #
 #
-#class FileGroup2Set(viewsets.ModelViewSet):
-#    """
-#    A viewset for viewing and editing user instances.
-#    """
-#    serializer_class = FileGroup2Serializer
-#    queryset = FileGroup2.objects.all()
+class FileGroupSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing user instances.
+    """
+    serializer_class = FileGroupSerializer
+    queryset = FileGroup.objects.all()
 #
 #
-#class GroupSearchResultSet(viewsets.ModelViewSet):
-#    """
-#    A viewset for viewing and editing user instances.
-#    """
-#    serializer_class = GroupSearchResultSerializer
-#    queryset = GroupSearchResult.objects.all()
+class GroupSearchResultSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing user instances.
+    """
+    serializer_class = GroupSearchResultSerializer
+    queryset = GroupSearchResult.objects.all()
