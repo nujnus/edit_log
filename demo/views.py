@@ -88,7 +88,10 @@ class FileGroupSet(viewsets.ModelViewSet):
     queryset = FileGroup.objects.all()
 
     @action(methods=['post'], detail=True, url_path="search", url_name="search")
-    def search():
+    def search(self, request, pk=None):
+        """
+        search_file_group
+        """
         return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
 
@@ -99,8 +102,11 @@ class GroupSearchResultSet(viewsets.ModelViewSet):
     serializer_class = GroupSearchResultSerializer
     queryset = GroupSearchResult.objects.all()
 
-    @action(methods=['post'], detail=True, url_path="search", url_name="search")
-    def search():
+    @action(methods=['post'], detail=False, url_path="search", url_name="search")
+    def search(self, request):
+        """
+        search_in_all_search_results
+        """
         return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 # class FileInfoDateSet(viewsets.ModelViewSet):
 #    """

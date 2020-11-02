@@ -70,9 +70,10 @@ urlpatterns = [
 #    # get
 #    path('file_groups/', get_all_file_groups),
 #
-#    # --------------------------------------------------------
 #    # post
-#    path('search_jobs/', search_file_group),  # {"file_groups": "xxx"}
+#    path('file_groups/<group_id>/search', search_file_group),  # {"file_groups": "xxx"}
+#    # --------------------------------------------------------
+
 #    # get
 #    path('search_jobs/', get_search_results),  # ?group=xxxx
 #    # get
