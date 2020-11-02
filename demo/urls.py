@@ -54,10 +54,10 @@ urlpatterns = [
 #    # --------------------------------------------------------
 #    # action:
 #    # patch
-#    path('files/<file_id>/increase', view.update_file_info_edit_time, ),  # update_file_info_edit_time
+#    path('files/<file_id>/increase', view.update_file_info_edit_time, ),  # update_file_info_edit_time #(((done)))
 
 #    # patch
-#    path('files/<file_id>/partial', view.tag_file),  #update_partial_tag
+#    path('files/<file_id>/partial', view.tag_file),  #update_partial_tag  #(((done)))
 #    # patch
 #    path('files/<file_id>/partial', view.description_file),  #update_partial_description
 

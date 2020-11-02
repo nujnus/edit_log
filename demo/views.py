@@ -64,19 +64,19 @@ class FileInfoSet(viewsets.ModelViewSet):
     queryset = FileInfo.objects.all()
 
     @action(methods=['patch'], detail=True, url_path="increase", url_name="increase")
-    def increase():
+    def increase(self, request, pk=None):
         return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
     @action(methods=['patch'], detail=True, url_path="partial", url_name="partial_update")
-    def update_partial():
+    def update_partial(self, request, pk=None):
         return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
-    @action(methods=['get'], detail=True, url_path="sum_edit", url_name="sum_edit")
-    def sum_edit():
+    @action(methods=['get'], detail=True, url_path="savetimes/sum", url_name="sum_savetimes")
+    def sum_savetimes(self, request, pk=None):
         return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
     @action(methods=['get'], detail=True, url_path="dates", url_name="dates")
-    def dates():
+    def dates(self, request, pk=None):
         return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
 
