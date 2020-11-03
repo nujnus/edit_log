@@ -63,7 +63,7 @@ class FileInfoSet(mixins.CreateModelMixin,
                   # mixins.RetrieveModelMixin,
                   # mixins.UpdateModelMixin,
                   # mixins.DestroyModelMixin,
-                  mixins.ListModelMixin,
+                  # mixins.ListModelMixin,
                   viewsets.GenericViewSet):
     """
     A viewset for viewing and editing user instances.
@@ -87,24 +87,68 @@ class FileInfoSet(mixins.CreateModelMixin,
 
         # 日期时间:
         # raw也能直接返回:
-        print(request.query_params)
-        validated_date={"date": "2020-9-12"}
+        # validated_date = {"date": "2020-9-12"}
         if "date" in request.query_params:
-           date = request.query_params
-           date_serializer = DateSerializer(data = date)
-        if date_serializer.is_valid():
-           validated_date = date_serializer.validated_data
-        sql = "select \
-          file.id, file.path, file.tag, file.description,file.activate, file.exist, file.savetime_total,\
-          FileInfoDate.date, FileInfoDate.savetime\
-          from FileInfo as file\
-          left join FileInfo_has_Date as file_date on file.id = file_date.FileInfo_id\
-          left join FileInfoDate on FileInfoDate.id = file_date.FileInfoDate_id\
-          where FileInfoDate.date = '{}' limit 100"
-        queryset = FileInfo.objects.raw(sql.format(validated_date["date"]))
-        serializer = FileInfoWithDateSerializer(queryset, many=True)
-        return Response(serializer.data)
+            date = request.query_params
+            date_serializer = DateSerializer(data=date)
+            if date_serializer.is_valid():
+                validated_date = date_serializer.validated_data
+                sql = "select \
+                file.id, file.path, file.tag, file.description,file.activate, file.exist, file.savetime_total,\
+                FileInfoDate.date, FileInfoDate.savetime\
+                from FileInfo as file\
+                left join FileInfo_has_Date as file_date on file.id = file_date.FileInfo_id\
+                left join FileInfoDate on FileInfoDate.id = file_date.FileInfoDate_id\
+                where FileInfoDate.date = '{}' limit 100"
+                queryset = FileInfo.objects.raw(sql.format(validated_date["date"]))
+                serializer = FileInfoWithDateSerializer(queryset, many=True)
+                return Response(serializer.data)
+        if "path_contains" in request.query_params:
+            params = request.query_params
+            params = DateSerializer(data=params)
+            if params.is_valid():
+                validated_params = params.validated_data
+                queryset = FileInfo.objects.filter(path__contains=validated_params["path_contains"])
+                serializer = FileInfoSerializer(queryset, many=True)
+                return Response(serializer.data)
+                # return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+            return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+        if "tag_contains" in request.query_params:
+            params = request.query_params
+            params = DateSerializer(data=params)
+            if params.is_valid():
+                validated_params = params.validated_data
+                queryset = FileInfo.objects.filter(tag__contains=validated_params["tag_contains"])
+                serializer = FileInfoSerializer(queryset, many=True)
+                return Response(serializer.data)
+                # return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+            return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+        if "begin_date" in request.query_params and "end_date" in request.query_params:
+            params = request.query_params
+            params = DateSerializer(data=params)
+            if params.is_valid():
+                validated_params = params.validated_data
+                sql = "select \
+                file.id, file.path, file.tag, file.description,file.activate, file.exist, file.savetime_total,\
+                FileInfoDate.date, FileInfoDate.savetime\
+                from FileInfo as file\
+                left join FileInfo_has_Date as file_date on file.id = file_date.FileInfo_id\
+                left join FileInfoDate on FileInfoDate.id = file_date.FileInfoDate_id\
+                where FileInfoDate.date > '{}' and FileInfoDate.date < '{}' limit 100"
+                queryset = FileInfo.objects.raw(
+                    sql.format(validated_params["begin_date"], validated_params['end_date']))
+                serializer = FileInfoWithDateSerializer(queryset, many=True)
+                return Response(serializer.data)
+        else:
+            queryset = self.filter_queryset(self.get_queryset())
 
+            page = self.paginate_queryset(queryset)
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
 
     def partial_update(self, request, *args, **kwargs):
         return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
