@@ -58,6 +58,22 @@ class FileInfoDateSerializer(serializers.ModelSerializer):
        model = FileInfoDate
        fields = '__all__'
 
+#class FileInfoWithDateSerializer(serializers.Serializer):
+
+class DateSerializer(serializers.Serializer):
+   date = serializers.DateField()
+
+class FileInfoWithDateSerializer(serializers.ModelSerializer):
+   path = serializers.FilePathField(TARGET_FILE_DIRECTORY)
+   date = serializers.DateField()
+   savetime = serializers.IntegerField()
+   class Meta:
+       model = FileInfo
+       fields = '__all__'
+#   class Meta:
+#       model = FileInfoDate
+#       fields = '__all__'
+
 class FileInfoHasGroupSerializer(serializers.ModelSerializer):
    class Meta:
        model = FileInfoHasGroup

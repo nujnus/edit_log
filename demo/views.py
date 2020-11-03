@@ -51,7 +51,7 @@ def month_archive(request, year, month, format=None):
 
 from demo.models import FileInfo, FileInfo_has_Date, FileInfoDate, FileInfoHasGroup, FileGroup, GroupSearchResult
 from demo.serializers import FileInfoSerializer, FileGroupSerializer, FileInfoHasGroupSerializer, \
-    GroupSearchResultSerializer, FileInfoDateSerializer
+    GroupSearchResultSerializer, FileInfoDateSerializer, FileInfoWithDateSerializer, DateSerializer
 
 #
 #
@@ -60,10 +60,10 @@ from rest_framework import generics, mixins, views
 
 # class FileInfoSet(viewsets.ModelViewSet):
 class FileInfoSet(mixins.CreateModelMixin,
-                  #mixins.RetrieveModelMixin,
-                  #mixins.UpdateModelMixin,
-                  #mixins.DestroyModelMixin,
-                  # mixins.ListModelMixin,
+                  # mixins.RetrieveModelMixin,
+                  # mixins.UpdateModelMixin,
+                  # mixins.DestroyModelMixin,
+                  mixins.ListModelMixin,
                   viewsets.GenericViewSet):
     """
     A viewset for viewing and editing user instances.
@@ -75,7 +75,28 @@ class FileInfoSet(mixins.CreateModelMixin,
         """
         自定义搜索
         """
-        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+        # 路径
+        # queryset = FileInfo.objects.filter(path__contains="ab")
+        # serializer = self.get_serializer(queryset, many=True)
+        # return Response(serializer.data)
+
+        # 标记
+        # queryset = FileInfo.objects.filter(tag__contains="ab")
+        # serializer = self.get_serializer(queryset, many=True)
+        # return Response(serializer.data)
+
+        # 日期时间:
+        # raw也能直接返回:
+        queryset = FileInfo.objects.raw("select \
+          file.id, file.path, file.tag, file.description,file.activate, file.exist, file.savetime_total,\
+          FileInfoDate.date, FileInfoDate.savetime\
+          from FileInfo as file\
+          left join FileInfo_has_Date as file_date on file.id = file_date.FileInfo_id\
+          left join FileInfoDate on FileInfoDate.id = file_date.FileInfoDate_id\
+          where FileInfoDate.date = '2019-11-19' limit 100")
+        serializer = FileInfoWithDateSerializer(queryset, many=True)
+        return Response(serializer.data)
+
 
     def partial_update(self, request, *args, **kwargs):
         return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
@@ -84,8 +105,8 @@ class FileInfoSet(mixins.CreateModelMixin,
     def increase(self, request, pk=None):
         return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
-    #@action(methods=['patch'], detail=True, url_path="partial", url_name="partial_update")
-    #def update_partial(self, request, pk=None):
+    # @action(methods=['patch'], detail=True, url_path="partial", url_name="partial_update")
+    # def update_partial(self, request, pk=None):
     #    return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
     @action(methods=['get'], detail=True, url_path="savetimes/sum", url_name="sum_savetimes")
@@ -97,13 +118,13 @@ class FileInfoSet(mixins.CreateModelMixin,
         return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
 
-#class FileGroupSet(viewsets.ModelViewSet):
+# class FileGroupSet(viewsets.ModelViewSet):
 class FileGroupSet(mixins.CreateModelMixin,
-                  #mixins.RetrieveModelMixin,
-                  #mixins.UpdateModelMixin,
-                  #mixins.DestroyModelMixin,
-                  mixins.ListModelMixin,
-                  viewsets.GenericViewSet):
+                   # mixins.RetrieveModelMixin,
+                   # mixins.UpdateModelMixin,
+                   # mixins.DestroyModelMixin,
+                   mixins.ListModelMixin,
+                   viewsets.GenericViewSet):
     """
     A viewset for viewing and editing user instances.
     """
@@ -118,13 +139,13 @@ class FileGroupSet(mixins.CreateModelMixin,
         return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
 
-#class GroupSearchResultSet(viewsets.ModelViewSet):
+# class GroupSearchResultSet(viewsets.ModelViewSet):
 class GroupSearchResultSet(mixins.CreateModelMixin,
-                  mixins.RetrieveModelMixin,
-                  #mixins.UpdateModelMixin,
-                  #mixins.DestroyModelMixin,
-                  mixins.ListModelMixin,
-                  viewsets.GenericViewSet):
+                           mixins.RetrieveModelMixin,
+                           # mixins.UpdateModelMixin,
+                           # mixins.DestroyModelMixin,
+                           mixins.ListModelMixin,
+                           viewsets.GenericViewSet):
     """
     A viewset for viewing and editing user instances.
     """
