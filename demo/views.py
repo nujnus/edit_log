@@ -87,13 +87,21 @@ class FileInfoSet(mixins.CreateModelMixin,
 
         # 日期时间:
         # raw也能直接返回:
-        queryset = FileInfo.objects.raw("select \
+        print(request.query_params)
+        validated_date={"date": "2020-9-12"}
+        if "date" in request.query_params:
+           date = request.query_params
+           date_serializer = DateSerializer(data = date)
+        if date_serializer.is_valid():
+           validated_date = date_serializer.validated_data
+        sql = "select \
           file.id, file.path, file.tag, file.description,file.activate, file.exist, file.savetime_total,\
           FileInfoDate.date, FileInfoDate.savetime\
           from FileInfo as file\
           left join FileInfo_has_Date as file_date on file.id = file_date.FileInfo_id\
           left join FileInfoDate on FileInfoDate.id = file_date.FileInfoDate_id\
-          where FileInfoDate.date = '2019-11-19' limit 100")
+          where FileInfoDate.date = '{}' limit 100"
+        queryset = FileInfo.objects.raw(sql.format(validated_date["date"]))
         serializer = FileInfoWithDateSerializer(queryset, many=True)
         return Response(serializer.data)
 
