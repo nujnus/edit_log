@@ -61,7 +61,7 @@ from rest_framework import generics, mixins, views
 # class FileInfoSet(viewsets.ModelViewSet):
 class FileInfoSet(mixins.CreateModelMixin,
                   # mixins.RetrieveModelMixin,
-                  # mixins.UpdateModelMixin,
+                  mixins.UpdateModelMixin,
                   # mixins.DestroyModelMixin,
                   # mixins.ListModelMixin,
                   viewsets.GenericViewSet):
@@ -151,16 +151,43 @@ class FileInfoSet(mixins.CreateModelMixin,
             return Response(serializer.data)
 
     def partial_update(self, request, *args, **kwargs):
+        print(request.data)
         return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
     @action(methods=['patch'], detail=True, url_path="increase", url_name="increase")
     def increase(self, request, pk=None):
-        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+        f_h_ds = FileInfo_has_Date.objects.filter(FileInfo_id=pk)
+        assert len(f_h_ds) > 0, "没有对应的pk, 或没有对应的时间"
+
+        #if f_h_ds == 0: 创建对应记录.
+        list_of_file_info_date = [
+            FileInfoDate.objects.get(id=f_h_d.FileInfoDate_id)
+            for f_h_d in f_h_ds
+        ]
+
+        #必要时创建记录.
+        import datetime
+        date_ids = [f_h_d.FileInfoDate_id for  f_h_d in FileInfo_has_Date.objects.filter(FileInfo_id=pk)]
+        queryset = FileInfoDate.objects.filter(id__in=date_ids).filter(date=datetime.date(2020, 2, 23))
+        q = queryset[0]
+        q.savetime += 1
+        q.save()
+
+        # print(type(list_of_file_info_date[0].date))
+        # datetime.date(2020,2,23)
+        #list_of_file_info_date = [fd for fd in list_of_file_info_date if fd.date == datetime.date(2020, 2, 23)]
+        #for file_info_date in list_of_file_info_date:
+        #    file_info_date.savetime += 1
+        #    file_info_date.save()
+        serializer = FileInfoDateSerializer(q)
+        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": serializer.data})
+        # return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
     # @action(methods=['patch'], detail=True, url_path="partial", url_name="partial_update")
     # def update_partial(self, request, pk=None):
     #    return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
+    # ----groupby------------------------
     @action(methods=['get'], detail=True, url_path="savetimes/sum", url_name="sum_savetimes")
     def sum_savetimes(self, request, pk=None):
         return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})

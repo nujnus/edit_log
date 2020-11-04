@@ -40,17 +40,17 @@ router.register(r'search_jobs', views.GroupSearchResultSet , basename='GroupSear
 # --------------------------------------------------------
 urlpatterns = [
 #    # post  #create
-#    path('files/', view.create_file_info),  # create_file_info
+#    path('files/', view.create_file_info),  # create_file_info  (((done)))
 #    # get   #rebuild
-#    path('files/', view.filename_search),  # ?name_contains=123   (((done)))
+#    path('files/', view.filename_search),  # ?path_contains=123   (((done)))
 #    # get
-#    path('files/', view.file_date_search),  # ?date=2020-1-1
+#    path('files/', view.file_date_search),  # ?date=2020-1-1   (((done)))
 #    # get
-#    path('files/', view.file_date_range_search),  # ?date_between=[2020-1-1, 2020-2-1]
+#    path('files/', view.file_date_range_search),  # ?date_between=[2020-1-1, 2020-2-1]  (((done)))  #还差validate
 #    # get
-#    path('files/', view.file_tag_search),  # ?tag_contains=456
+#    path('files/', view.file_tag_search),  # ?tag_contains=456  (((done)))
 #    # get
-#    path('files/', view.get_all_file),
+#    path('files/', view.get_all_file),  #(((done)))
 #    # --------------------------------------------------------
 #    # action:
 #    # patch
