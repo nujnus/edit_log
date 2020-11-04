@@ -59,11 +59,12 @@ from demo.serializers import FileInfoSerializer, FileGroupSerializer, FileInfoHa
 #
 #
 from rest_framework import generics, mixins, views
+from demo import permissions
 
 
 # class FileInfoSet(viewsets.ModelViewSet):
 class FileInfoSet(mixins.CreateModelMixin,
-                  # mixins.RetrieveModelMixin,
+                  mixins.RetrieveModelMixin,
                   mixins.UpdateModelMixin,
                   # mixins.DestroyModelMixin,
                   # mixins.ListModelMixin,
@@ -73,6 +74,8 @@ class FileInfoSet(mixins.CreateModelMixin,
     """
     serializer_class = FileInfoSerializer
     queryset = FileInfo.objects.all()
+    authentication_classes = [JWTAuthentication,]
+    permission_classes = [permissions.BlocklistPermission,]
 
     def list(self, request, *args, **kwargs):
         """
@@ -212,6 +215,7 @@ class FileInfoSet(mixins.CreateModelMixin,
         """
         statistics_a_file_all_date, {"statistics_date": True}),
         """
+        self.check_object_permissions(request, pk)
         sql = "select \
         file.id, \
         max(FileInfoDate.date) as max_date, min(FileInfoDate.date) as min_date\
