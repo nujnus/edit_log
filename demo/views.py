@@ -54,7 +54,7 @@ def month_archive(request, year, month, format=None):
 
 from demo.models import FileInfo, FileInfo_has_Date, FileInfoDate, FileInfoHasGroup, FileGroup, GroupSearchResult
 from demo.serializers import FileInfoSerializer, FileGroupSerializer, FileInfoHasGroupSerializer, \
-    GroupSearchResultSerializer, FileInfoDateSerializer, FileInfoWithDateSerializer, DateSerializer
+    GroupSearchResultSerializer, FileInfoDateSerializer, FileInfoWithDateSerializer, DateSerializer,FileInfoWithMaxMinDateSerializer
 
 #
 #
@@ -193,11 +193,38 @@ class FileInfoSet(mixins.CreateModelMixin,
     # ----groupby------------------------
     @action(methods=['get'], detail=True, url_path="savetimes/sum", url_name="sum_savetimes")
     def sum_savetimes(self, request, pk=None):
+        """
+        statistics_a_file_all_edit_time_orderby, {"sum_edit": True}),
+        """
+        sql = "select \
+        file.id, file.path, file.tag, file.description,file.activate, file.exist, file.savetime_total,\
+        FileInfoDate.date, FileInfoDate.savetime\
+        from FileInfo as file\
+        left join FileInfo_has_Date as file_date on file.id = file_date.FileInfo_id\
+        left join FileInfoDate on FileInfoDate.id = file_date.FileInfoDate_id\
+        where FileInfoDate.date > '{}' and FileInfoDate.date < '{}' limit 100"
+
         return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+
 
     @action(methods=['get'], detail=True, url_path="dates", url_name="dates")
     def dates(self, request, pk=None):
-        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+        """
+        statistics_a_file_all_date, {"statistics_date": True}),
+        """
+        sql = "select \
+        file.id, \
+        max(FileInfoDate.date) as max_date, min(FileInfoDate.date) as min_date\
+        from FileInfo as file \
+        left join FileInfo_has_Date as file_date on file.id = file_date.FileInfo_id \
+        left join FileInfoDate on FileInfoDate.id = file_date.FileInfoDate_id \
+        where file.id = {} \
+        group by file.id "
+
+        queryset = FileInfo.objects.raw(sql.format(pk))
+        serializer = FileInfoWithMaxMinDateSerializer(queryset, many=True)
+        return Response(serializer.data)
+        #return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
 
 from demo import tasks

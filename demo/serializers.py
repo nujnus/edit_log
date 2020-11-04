@@ -88,6 +88,13 @@ class DateSerializer(serializers.Serializer):
         #else:
         #    raise serializers.ValidationError('传的参数有误，请重新上传')
 
+
+class FileInfoWithMaxMinDateSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    min_date = serializers.DateField()
+    max_date = serializers.DateField()
+
+
 class FileInfoWithDateSerializer(serializers.ModelSerializer):
     path = serializers.FilePathField(TARGET_FILE_DIRECTORY)
     date = serializers.DateField()
