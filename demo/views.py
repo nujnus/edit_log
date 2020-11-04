@@ -14,6 +14,9 @@ from django.forms.models import model_to_dict
 from rest_framework.parsers import MultiPartParser, FileUploadParser, FormParser
 from rest_framework.decorators import parser_classes
 
+from django_celery_results.models import TaskResult
+
+
 # @api_view(['GET'])
 # @authentication_classes([JWTAuthentication])
 # @permission_classes([IsAuthenticated])
@@ -197,6 +200,7 @@ class FileInfoSet(mixins.CreateModelMixin,
         return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
 
+from demo import tasks
 # class FileGroupSet(viewsets.ModelViewSet):
 class FileGroupSet(mixins.CreateModelMixin,
                    # mixins.RetrieveModelMixin,
@@ -215,8 +219,8 @@ class FileGroupSet(mixins.CreateModelMixin,
         """
         search_file_group
         """
-        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
-
+        res = tasks.add.delay(1, 3)
+        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": res.task_id})
 
 # class GroupSearchResultSet(viewsets.ModelViewSet):
 class GroupSearchResultSet(mixins.CreateModelMixin,
@@ -236,7 +240,8 @@ class GroupSearchResultSet(mixins.CreateModelMixin,
         """
         search_in_all_search_results
         """
-        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+        data = list(TaskResult.objects.filter(task_id=request.data["task_id"]).values())
+        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": data})
 # class FileInfoDateSet(viewsets.ModelViewSet):
 #    """
 #    A viewset for viewing and editing user instances.
