@@ -26,3 +26,9 @@ def end_date_validator(value):
     return value
     # if value  0:
     #    raise serializers.ValidationError('This field must be an even number.')
+
+def date_validator(value):  # 对多个字段校验
+   # attrs是一个字典，里面是传过来的所有字段
+   #if 'python' in attrs['title'].lower() and attrs['post_category']==1:
+   print("date_validator: {}".format(str(value)))
+   return value

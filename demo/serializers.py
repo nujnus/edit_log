@@ -66,13 +66,27 @@ class FileInfoDateSerializer(serializers.ModelSerializer):
 
 # class FileInfoWithDateSerializer(serializers.Serializer):
 
+from demo import validators
 class DateSerializer(serializers.Serializer):
-    date = serializers.DateField(required=False)
+    date = serializers.DateField(required=False, validators=[validators.date_validator])
     path_contains = serializers.CharField(max_length=200, required=False)
     tag_contains = serializers.CharField(max_length=200, required=False)
     begin_date = serializers.DateField(required=False)
     end_date = serializers.DateField(required=False)
 
+    def validate_date(self, attrs):  # 对多个字段校验
+        # attrs是一个字典，里面是传过来的所有字段
+        #if 'python' in attrs['title'].lower() and attrs['post_category']==1:
+        print("validate_date: {}".format(str(attrs)))
+        return attrs
+
+    def validate(self, attrs):  # 对多个字段校验
+        # attrs是一个字典，里面是传过来的所有字段
+        #if 'python' in attrs['title'].lower() and attrs['post_category']==1:
+        print("validate: {}".format(str(attrs)))
+        return attrs
+        #else:
+        #    raise serializers.ValidationError('传的参数有误，请重新上传')
 
 class FileInfoWithDateSerializer(serializers.ModelSerializer):
     path = serializers.FilePathField(TARGET_FILE_DIRECTORY)
