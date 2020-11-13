@@ -187,9 +187,10 @@ class FileInfoSet(mixins.CreateModelMixin,
                 validated_params = params.validated_data
                 queryset = FileInfo.objects.filter(path__contains=validated_params["path_contains"])
                 serializer = FileInfoSerializer(queryset, many=True)
-                return Response(serializer.data)
+                return APIResponse(serializer.data)
                 # return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
-            return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+            #return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+            return APIResponse("serializer.data")
         if "tag_contains" in request.query_params:
             params = request.query_params
             params = DateSerializer(data=params)
@@ -199,7 +200,8 @@ class FileInfoSet(mixins.CreateModelMixin,
                 serializer = FileInfoSerializer(queryset, many=True)
                 return Response(serializer.data)
                 # return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
-            return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+            #return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+            return APIResponse("serializer.data")
         if "begin_date" in request.query_params and "end_date" in request.query_params:
             params = request.query_params
             params = DateSerializer(data=params)
@@ -215,7 +217,8 @@ class FileInfoSet(mixins.CreateModelMixin,
                 queryset = FileInfo.objects.raw(
                     sql.format(validated_params["begin_date"], validated_params['end_date']))
                 serializer = FileInfoWithDateSerializer(queryset, many=True)
-                return Response(serializer.data)
+                #return Response(serializer.data)
+                return APIResponse(serializer.data)
         else:
             queryset = self.filter_queryset(self.get_queryset())
 
@@ -225,11 +228,13 @@ class FileInfoSet(mixins.CreateModelMixin,
                 return self.get_paginated_response(serializer.data)
 
             serializer = self.get_serializer(queryset, many=True)
-            return Response(serializer.data)
+            #return Response(serializer.data)
+            return APIResponse(serializer.data)
 
     def partial_update(self, request, *args, **kwargs):
         print(request.data)
-        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+        #return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+        return APIResponse("serializer.data")
 
     @action(methods=['patch'], detail=True, url_path="increase", url_name="increase")
     def increase(self, request, pk=None):
@@ -257,7 +262,8 @@ class FileInfoSet(mixins.CreateModelMixin,
         #    file_info_date.savetime += 1
         #    file_info_date.save()
         serializer = FileInfoDateSerializer(q)
-        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": serializer.data})
+        #return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": serializer.data})
+        return APIResponse(serializer.data)
         # return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
     # @action(methods=['patch'], detail=True, url_path="partial", url_name="partial_update")
@@ -278,7 +284,8 @@ class FileInfoSet(mixins.CreateModelMixin,
         left join FileInfoDate on FileInfoDate.id = file_date.FileInfoDate_id\
         where FileInfoDate.date > '{}' and FileInfoDate.date < '{}' limit 100"
 
-        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+        #return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+        return APIResponse("data")
 
     @action(methods=['get'], detail=True, url_path="dates", url_name="dates")
     def dates(self, request, pk=None):
@@ -297,8 +304,9 @@ class FileInfoSet(mixins.CreateModelMixin,
 
         queryset = FileInfo.objects.raw(sql.format(pk))
         serializer = FileInfoWithMaxMinDateSerializer(queryset, many=True)
-        return Response(serializer.data)
+        #return Response(serializer.data)
         # return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+        return APIResponse(serializer.data)
 
 
 from demo import tasks
@@ -323,7 +331,8 @@ class FileGroupSet(mixins.CreateModelMixin,
         search_file_group
         """
         res = tasks.add.delay(1, 3)
-        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": res.task_id})
+        #return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": res.task_id})
+        return APIResponse(data)
 
 
 # class GroupSearchResultSet(viewsets.ModelViewSet):
@@ -345,7 +354,7 @@ class GroupSearchResultSet(mixins.CreateModelMixin,
         search_in_all_search_results
         """
         data = list(TaskResult.objects.filter(task_id=request.data["task_id"]).values())
-        return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": data})
+        return APIResponse(data)
 # class FileInfoDateSet(viewsets.ModelViewSet):
 #    """
 #    A viewset for viewing and editing user instances.
