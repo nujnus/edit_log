@@ -77,14 +77,18 @@ class DateSerializer(serializers.Serializer):
     def validate_date(self, attrs):  # 对多个字段校验
         # attrs是一个字典，里面是传过来的所有字段
         #if 'python' in attrs['title'].lower() and attrs['post_category']==1:
-        print("validate_date: {}".format(str(attrs)))
-        return attrs
+        #print("validate_date: {}".format(str(attrs)))
+        #raise serializers.ValidationError('传的参数有误，请重新上传')
+        return attrs  #如果这个注释了, 不会报错,但是返回值会直接变空数组
+        #pass
 
     def validate(self, attrs):  # 对多个字段校验
+        #pass
         # attrs是一个字典，里面是传过来的所有字段
         #if 'python' in attrs['title'].lower() and attrs['post_category']==1:
-        print("validate: {}".format(str(attrs)))
-        return attrs
+        #raise serializers.ValidationError('This field must be an even number.')
+        #print("validate: {}".format(str(attrs)))
+        return attrs  #如果不return, 会报错 .validate() should return the validated data"
         #else:
         #    raise serializers.ValidationError('传的参数有误，请重新上传')
 

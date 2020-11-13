@@ -28,35 +28,38 @@ from rest_framework.exceptions import APIException
 
 
 class EditLogExceptin(Exception):
-    pass
-
-
-class TooLongExceptin(EditLogExceptin):
-    "this is user's Exception for check the length of name "
-
-    def __init__(self, len=None, code=20003):
-        self.detail = "姓名长度是{}, 超过长度了".format(str(len))
-        self.code = code
-
     def __str__(self):
         return self.detail
 
-
-class TooLongExceptin2(Exception):
-    "this is user's Exception for check the length of name "
-
-    def __init__(self, len=None, code=20003):
-        self.detail = "姓名长度是{}, 超过长度了".format(str(len))
+class DBBroken(EditLogExceptin):
+    def __init__(self, message=None, code=30001):
+        self.detail = "数据库数据结构异常:{}".format(str(message))
         self.code = code
 
-    def __str__(self):
-        return self.detail
+class IdUsed(EditLogExceptin):
+    def __init__(self, id=None, code=30002):
+        self.detail = "该id已被占用:{}".format(str(id))
+        self.code = code
+
+class ExecutionFailed(EditLogExceptin):
+    def __init__(self, message=None, code=30003):
+        self.detail = "任务执行失败:{}".format(str(message))
+        self.code = code
+
+from rest_framework.response import Response
+class APIResponse(Response):
+    def __init__(self, data=None, code=0, detail='success', **kwargs):
+        dic = {'code': code, 'detail': detail}
+        if data:
+            dic = {'code': code, 'detail': detail, 'data': data}
+        super().__init__(data=dic, **kwargs)
 
 
 from django.db import connection, transaction
 from django.db import transaction
 
 from rest_framework.exceptions import *
+
 
 # @transaction.atomic()
 @api_view(['GET'])
@@ -71,11 +74,12 @@ def special_case_2003(request, format=None):
     # transaction.savepoint_commit(s1)  #在with中没用, 在@transaction.atomic()中有用.
     # transaction.commit()
 
-    #raise ParseError()
-    raise TypeError()
+    # raise ParseError()
+    #raise TypeError()
+    #raise DBBroken(message="测试")
+    #raise IdUsed(id=123)
+    raise ExecutionFailed(message="job name: 123")
 
-    #raise TooLongExceptin2(len=123)
-    # raise TooLongExceptin(len=123)
     # transaction.commit()
     # except Exception as e:
     #  transaction.savepoint_rollback(s1)  #在raise e之前, 就又触发了异常.
@@ -164,7 +168,7 @@ class FileInfoSet(mixins.CreateModelMixin,
         if "date" in request.query_params:
             date = request.query_params
             date_serializer = DateSerializer(data=date)
-            if date_serializer.is_valid():
+            if date_serializer.is_valid(raise_exception=True):
                 validated_date = date_serializer.validated_data
                 sql = "select \
                 file.id, file.path, file.tag, file.description,file.activate, file.exist, file.savetime_total,\
@@ -175,7 +179,7 @@ class FileInfoSet(mixins.CreateModelMixin,
                 where FileInfoDate.date = '{}' limit 100"
                 queryset = FileInfo.objects.raw(sql.format(validated_date["date"]))
                 serializer = FileInfoWithDateSerializer(queryset, many=True)
-                return Response(serializer.data)
+                return APIResponse(serializer.data)
         if "path_contains" in request.query_params:
             params = request.query_params
             params = DateSerializer(data=params)

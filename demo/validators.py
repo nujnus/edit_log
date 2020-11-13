@@ -1,5 +1,6 @@
 # 自定义validator
 from rest_framework.exceptions import ValidationError
+#from rest_framework import serializers
 
 # Function based
 def even_number(value):
@@ -30,5 +31,7 @@ def end_date_validator(value):
 def date_validator(value):  # 对多个字段校验
    # attrs是一个字典，里面是传过来的所有字段
    #if 'python' in attrs['title'].lower() and attrs['post_category']==1:
-   print("date_validator: {}".format(str(value)))
-   return value
+   #print("date_validator: {}".format(str(value)))
+   #return None
+   pass
+   #raise
