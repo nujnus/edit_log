@@ -16,7 +16,6 @@ from rest_framework.decorators import parser_classes
 
 from django_celery_results.models import TaskResult
 
-
 # @api_view(['GET'])
 # @authentication_classes([JWTAuthentication])
 # @permission_classes([IsAuthenticated])
@@ -25,11 +24,64 @@ from django_celery_results.models import TaskResult
 
 
 import demo.codes as codes
+from rest_framework.exceptions import APIException
 
 
+class EditLogExceptin(Exception):
+    pass
+
+
+class TooLongExceptin(EditLogExceptin):
+    "this is user's Exception for check the length of name "
+
+    def __init__(self, len=None, code=20003):
+        self.detail = "姓名长度是{}, 超过长度了".format(str(len))
+        self.code = code
+
+    def __str__(self):
+        return self.detail
+
+
+class TooLongExceptin2(Exception):
+    "this is user's Exception for check the length of name "
+
+    def __init__(self, len=None, code=20003):
+        self.detail = "姓名长度是{}, 超过长度了".format(str(len))
+        self.code = code
+
+    def __str__(self):
+        return self.detail
+
+
+from django.db import connection, transaction
+from django.db import transaction
+
+from rest_framework.exceptions import *
+
+# @transaction.atomic()
 @api_view(['GET'])
 def special_case_2003(request, format=None):
     data = 123
+    print(123)
+    # try:
+    # with transaction.atomic():
+    cursor = connection.cursor()
+    s1 = transaction.savepoint()  # 可以设置多个保存点
+    cursor.execute('update FileInfo set tag = "KncQeaRabUEacHLImhACaQWSJJJ666999" WHERE id = 3')
+    # transaction.savepoint_commit(s1)  #在with中没用, 在@transaction.atomic()中有用.
+    # transaction.commit()
+
+    #raise ParseError()
+    raise TypeError()
+
+    #raise TooLongExceptin2(len=123)
+    # raise TooLongExceptin(len=123)
+    # transaction.commit()
+    # except Exception as e:
+    #  transaction.savepoint_rollback(s1)  #在raise e之前, 就又触发了异常.
+    #  #transaction.rollback()
+    #  raise e
+
     return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": data})
 
 
@@ -54,12 +106,26 @@ def month_archive(request, year, month, format=None):
 
 from demo.models import FileInfo, FileInfo_has_Date, FileInfoDate, FileInfoHasGroup, FileGroup, GroupSearchResult
 from demo.serializers import FileInfoSerializer, FileGroupSerializer, FileInfoHasGroupSerializer, \
-    GroupSearchResultSerializer, FileInfoDateSerializer, FileInfoWithDateSerializer, DateSerializer,FileInfoWithMaxMinDateSerializer
+    GroupSearchResultSerializer, FileInfoDateSerializer, FileInfoWithDateSerializer, DateSerializer, \
+    FileInfoWithMaxMinDateSerializer
 
 #
 #
 from rest_framework import generics, mixins, views
 from demo import permissions
+
+import time
+
+
+def timeit(f):
+    def timed(*args, **kw):
+        ts = time.time()
+        result = f(*args, **kw)
+        te = time.time()
+        print('func:%r args:[%r, %r] took: %2.4f sec' % (f.__name__, args, kw, te - ts))
+        return result
+
+    return timed
 
 
 # class FileInfoSet(viewsets.ModelViewSet):
@@ -74,9 +140,10 @@ class FileInfoSet(mixins.CreateModelMixin,
     """
     serializer_class = FileInfoSerializer
     queryset = FileInfo.objects.all()
-    authentication_classes = [JWTAuthentication,]
-    permission_classes = [permissions.BlocklistPermission,]
+    authentication_classes = [JWTAuthentication, ]
+    permission_classes = [permissions.BlocklistPermission, ]
 
+    @timeit
     def list(self, request, *args, **kwargs):
         """
         自定义搜索
@@ -165,15 +232,15 @@ class FileInfoSet(mixins.CreateModelMixin,
         f_h_ds = FileInfo_has_Date.objects.filter(FileInfo_id=pk)
         assert len(f_h_ds) > 0, "没有对应的pk, 或没有对应的时间"
 
-        #if f_h_ds == 0: 创建对应记录.
+        # if f_h_ds == 0: 创建对应记录.
         list_of_file_info_date = [
             FileInfoDate.objects.get(id=f_h_d.FileInfoDate_id)
             for f_h_d in f_h_ds
         ]
 
-        #必要时创建记录.
+        # 必要时创建记录.
         import datetime
-        date_ids = [f_h_d.FileInfoDate_id for  f_h_d in FileInfo_has_Date.objects.filter(FileInfo_id=pk)]
+        date_ids = [f_h_d.FileInfoDate_id for f_h_d in FileInfo_has_Date.objects.filter(FileInfo_id=pk)]
         queryset = FileInfoDate.objects.filter(id__in=date_ids).filter(date=datetime.date(2020, 2, 23))
         q = queryset[0]
         q.savetime += 1
@@ -181,8 +248,8 @@ class FileInfoSet(mixins.CreateModelMixin,
 
         # print(type(list_of_file_info_date[0].date))
         # datetime.date(2020,2,23)
-        #list_of_file_info_date = [fd for fd in list_of_file_info_date if fd.date == datetime.date(2020, 2, 23)]
-        #for file_info_date in list_of_file_info_date:
+        # list_of_file_info_date = [fd for fd in list_of_file_info_date if fd.date == datetime.date(2020, 2, 23)]
+        # for file_info_date in list_of_file_info_date:
         #    file_info_date.savetime += 1
         #    file_info_date.save()
         serializer = FileInfoDateSerializer(q)
@@ -209,7 +276,6 @@ class FileInfoSet(mixins.CreateModelMixin,
 
         return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
-
     @action(methods=['get'], detail=True, url_path="dates", url_name="dates")
     def dates(self, request, pk=None):
         """
@@ -228,10 +294,12 @@ class FileInfoSet(mixins.CreateModelMixin,
         queryset = FileInfo.objects.raw(sql.format(pk))
         serializer = FileInfoWithMaxMinDateSerializer(queryset, many=True)
         return Response(serializer.data)
-        #return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
+        # return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": "data"})
 
 
 from demo import tasks
+
+
 # class FileGroupSet(viewsets.ModelViewSet):
 class FileGroupSet(mixins.CreateModelMixin,
                    # mixins.RetrieveModelMixin,
@@ -252,6 +320,7 @@ class FileGroupSet(mixins.CreateModelMixin,
         """
         res = tasks.add.delay(1, 3)
         return Response({"code": codes.CODE_SUCCESS, "message": codes.MSG_SUCCESS, "data": res.task_id})
+
 
 # class GroupSearchResultSet(viewsets.ModelViewSet):
 class GroupSearchResultSet(mixins.CreateModelMixin,
@@ -287,5 +356,4 @@ class GroupSearchResultSet(mixins.CreateModelMixin,
 #    """
 #    serializer_class = FileInfoHasGroupSerializer
 #    queryset = FileInfoHasGroup.objects.all()
-#
 #

@@ -13,6 +13,9 @@ CELERY_RESULT_SERIALIZER = 'json'  # 结果序列化方案
 # ------------------------------------
 
 DEBUG = True
+#DEBUG = False
+#ALLOWED_HOSTS = ['127.0.0.1']
+
 
 INSTALLED_APPS += ['user_sys',
                    'demo',
@@ -28,7 +31,7 @@ INSTALLED_APPS += ['user_sys',
 AUTH_USER_MODEL = "user_sys.CustomizeUser"  # "app1.Test_user_model"
 
 REST_FRAMEWORK = {
-    #'EXCEPTION_HANDLER': "user_sys.utility.exception_handler"
+    'EXCEPTION_HANDLER': "user_sys.utility.exception_handler"
 }
 
 MIDDLEWARE += []
@@ -44,7 +47,8 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': '123123',
         'HOST': '127.0.0.1',
-        'PORT': '3306'
+        'PORT': '3306',
+        'AUTOCOMMIT': False
     }
 }
 

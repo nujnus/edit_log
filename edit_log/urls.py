@@ -78,3 +78,4 @@ urlpatterns = (urlpatterns_for_app
                + urlpatterns_for_swagger
                + urlpatterns_for_admin
                + urlpatterns_for_media)
+

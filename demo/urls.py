@@ -39,6 +39,7 @@ router.register(r'groups', views.FileGroupSet , basename='FileGroup2Set')
 router.register(r'search_jobs', views.GroupSearchResultSet , basename='GroupSearchResultSet')
 # --------------------------------------------------------
 urlpatterns = [
+     path('special_case_2003/', views.special_case_2003),
 #    # post  #create
 #    path('files/', view.create_file_info),  # create_file_info  (((done)))
 #    # get   #rebuild
@@ -97,3 +98,4 @@ urlpatterns = [
 # ]
 
 urlpatterns += router.urls
+
